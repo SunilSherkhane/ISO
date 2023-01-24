@@ -1,8 +1,30 @@
-# kde-baseapps # too many dependencies
 sddm
 plasma5-plasma-desktop
+plasma5-plasma-pa
 konsole
+gwenview
 dolphin
-falkon
+kate
+firefox
+konsole
 pc-networkmanager # !i386
-ksnip
+qt5-sensors
+qt5-wayland
+kf5-kcoreaddons
+protobuf
+libmicrodns
+gwenview
+xmodmap
+hw-probe
+xinput
+dmidecode
+# Additional tiny hardware information tools such as lsblk, lsusb, lspci
+lsblk
+pciutils
+usbutils
+exfat-utils
+fusefs-exfat
+fusefs-ntfs
+fusefs-hfsfuse
+fusefs-ext2
+fusefs-squashfuse
