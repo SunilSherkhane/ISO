@@ -1,32 +1,14 @@
-# hello Live ISO builder [![Build Status](https://api.cirrus-ci.com/github/helloSystem/ISO.svg)](https://cirrus-ci.com/github/helloSystem/ISO)
+# helloSystem ISO <br> [![GitHub release (latest by date)](https://img.shields.io/github/v/release/helloSystem/ISO)](../../releases/latest) [![GitHub all releases](https://img.shields.io/github/downloads/helloSystem/ISO/total)](../../releases) [![GitHub release (latest by date)](https://img.shields.io/github/downloads/helloSystem/ISO/latest/total)](../../releases/latest) [![Build Status](https://api.cirrus-ci.com/github/helloSystem/ISO.svg)](https://cirrus-ci.com/github/helloSystem/ISO) [![Help Wanted Issues](https://img.shields.io/github/issues/helloSystem/ISO/help%20wanted)](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) [![](https://img.shields.io/badge/dynamic/json?color=orange&label=DistroWatch&query=popularity&url=https%3A%2F%2Fdiwa.demo-web-fahmi.my.id%2Fapi%2Fv2%2Fdistributions%2FhelloSystem)](https://distrowatch.com/hellosystem)
 
-## Release
+## Download
 
-The latest release build r0.8.0 can be downloaded [here](../../releases/tag/r0.8.0).
+* The **latest release** can be downloaded [here](../../releases/latest).
 
-## Continuous builds
+* **Continuous builds** can be downloaded [here](../../releases/). __CAUTION:__ These are meant for development and testing only. Use at your own risk.
 
-Continuous builds can be downloaded [here](../../releases/). __CAUTION:__ These are meant for development only. Use at your own risk. Do not use in production environments.
+## Documentation
 
-To minimize the amount of data when going from build to build, `.zsync` files are also provided. [More information](https://askubuntu.com/questions/54241/how-do-i-update-an-iso-with-zsync)
-
-It is possible to directly download and write straight to a USB stick in one go. __Caution:__ This will OVERWRITE the entire contents of the USB stick.
-
-```
-root@FreeBSD:/ # umount /dev/daX*
-root@FreeBSD:/ # curl -L "https://github.com/probonopd/furybsd-livecd/releases/download/continuous/...iso" | dd of=/dev/daX bs=4m
-```
-
-## System Requirements for live media
-
-* 2 GHz dual core processor
-* 2 GiB RAM (4 GiB recommended; before 0.7.0: 4 GiB minimum)
-* VGA capable of 1024x768 screen resolution 
-* Either a CD/DVD drive or a USB port for booting the installer media
-
-## Credentials for live media
-
-There is no password for `liveuser`. The `liveuser` account is removed upon install.  There is also no root password until it is set in the installer. You can become root using `sudo -i`.
+https://hellosystem.github.io/docs/
 
 ## Acknowledgements
 

@@ -2,7 +2,7 @@
 
 # Authors:
 # 2019-2020, Joe Maloney <jpm820@gmail.com>
-# 2020-2021, Simon Peter <probono@puredarwin.org>
+# 2020-2023, Simon Peter <probono@puredarwin.org>
 
 # Exit on errors, this is important for the graphical installer frontend
 set -e
@@ -75,25 +75,33 @@ if [ -n "${INSTALLER_DEVICE}" ] ; then
     umount /dev/fuse
   done
 
+  # Remove ZFS metadata from the disk so that we can use it for installation;
+  # otherwise bsdinstall zfsboot will fail with "Pool zroot already taken"
+  # in /tmp/bsdinstall_log
+  zpool labelclear -f "${INSTALLER_DEVICE}" || true # https://github.com/helloSystem/ISO/issues/473
+
   /sbin/gpart destroy -F "${INSTALLER_DEVICE}" || true # This can give 'gpart: arg0 'adaX': Invalid argument'. FIXME: Why?
   sync
   export ZFSBOOT_DISKS="${INSTALLER_DEVICE}"
   export ZFSBOOT_PARTITION_SCHEME="GPT"
-  export ZFSBOOT_POOL_NAME="zroot"
-  export ZFSBOOT_BEROOT_NAME="ROOT"
-  export ZFSBOOT_BOOTFS_NAME="default"
-  export ZFSBOOT_DATASET_NESTING="1"
-  export BOOT_BLOCKS_FROM_DISTSET="1"
-  export ZFSBOOT_VDEV_TYPE="stripe"
-  export ZFSBOOT_SWAP_SIZE="0" # Just hangs with "8g"
+  # export ZFSBOOT_POOL_NAME="zroot"
+  # export ZFSBOOT_BEROOT_NAME="ROOT"
+  # export ZFSBOOT_BOOTFS_NAME="default"
+  # export ZFSBOOT_DATASET_NESTING="1"
+  # export BOOT_BLOCKS_FROM_DISTSET="1"
+  # export ZFSBOOT_VDEV_TYPE="stripe"
+  export ZFSBOOT_SWAP_SIZE="16g"
+  if [ ! -z "${INSTALLER_DISABLE_SWAP}" ] ; then
+    export ZFSBOOT_SWAP_SIZE="0"
+  fi
   export ZFSBOOT_CONFIRM_LAYOUT="1"
   export nonInteractive="YES"
   # The following two lines are required so that the system is
   # bootable not only on EFI based but also on BIOS based machines
-  export ZFSBOOT_BOOT_TYPE"=BIOS+UEFI"
+  export ZFSBOOT_BOOT_TYPE="BIOS+UEFI"
   # export ZFSBOOT_PARTITION_SCHEME="GPT + Active" # Makes disk unbootable on EFI systems?
   env
-  bsdinstall zfsboot
+  sh -ex /usr/sbin/bsdinstall zfsboot
 else
   echo "Environment variable INSTALLER_DEVICE not set, running bsdinstall zfsboot"
   bsdinstall zfsboot
@@ -112,7 +120,7 @@ bsdinstall entropy
 # Cleanup LiveCD restore specific contents from destination pool
 chroot "${FSMNT}" pkg remove -y furybsd-live-settings
 # TODO: Move all of this to pkg scripts of the pkg manifests that have installed these things
-chroot "${FSMNT}" rm -rf "/Applications/Utilities/Install FreeBSD.app" || true
+chroot "${FSMNT}" rm -rf "/Applications/Utilities/Install helloSystem.app" || true
 
 # Configure the new installation
 mount -t devfs devfs ${FSMNT}/dev
@@ -244,6 +252,8 @@ fi
 # Enable sshd if the user has requested it
 if [ "${INSTALLER_ENABLE_SSH}" = "YES" ] ; then
   chroot "${FSMNT}" sysrc sshd_enable="YES"
+else
+  chroot "${FSMNT}" sysrc sshd_enable="NO"
 fi
 
 # Set new default_user the automatic login
@@ -290,6 +300,9 @@ sed -i '' -e 's|^vfs.root.mountfrom|# vfs.root.mountfrom|g' "${FSMNT}/boot/loade
 sed -i '' -e 's|^init_script|# init_script|g' "${FSMNT}/boot/loader.conf"
 if [ -e "/boot/loader.mute.d" ] ; then
   cp -r "/boot/loader.mute.d" "${FSMNT}"/boot/
+fi
+if [ -e "/boot/lua/local.lua" ] ; then
+  cp -r "/boot/lua/local.lua" "${FSMNT}"/boot/lua/
 fi
 
 # Cleanup
