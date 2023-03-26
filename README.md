@@ -1,16 +1,24 @@
-# helloSystem ISO <br> [![GitHub release (latest by date)](https://img.shields.io/github/v/release/helloSystem/ISO)](../../releases/latest) [![GitHub all releases](https://img.shields.io/github/downloads/helloSystem/ISO/total)](../../releases) [![GitHub release (latest by date)](https://img.shields.io/github/downloads/helloSystem/ISO/latest/total)](../../releases/latest) [![Build Status](https://api.cirrus-ci.com/github/helloSystem/ISO.svg)](https://cirrus-ci.com/github/helloSystem/ISO) [![Help Wanted Issues](https://img.shields.io/github/issues/helloSystem/ISO/help%20wanted)](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22) [![](https://img.shields.io/badge/dynamic/json?color=orange&label=DistroWatch&query=popularity&url=https%3A%2F%2Fdiwa.demo-web-fahmi.my.id%2Fapi%2Fv2%2Fdistributions%2FhelloSystem)](https://distrowatch.com/hellosystem)
+System requirements for building
+A FreeBSD or helloSystem installed on the computer. The FreeBSD version needs to match the FreeBSD version of the helloSystem ISO being built (e.g., 12.2-RELEASE)
 
-## Download
+2 GHz dual core processor
 
-* The **latest release** can be downloaded [here](../../releases/latest).
+4 GiB RAM (system memory)
 
-* **Continuous builds** can be downloaded [here](../../releases/). __CAUTION:__ These are meant for development and testing only. Use at your own risk.
+50 GB of hard-drive space
 
-## Documentation
+Either a CD-RW/DVD-RW drive or a USB port for writing the Live media
 
-https://hellosystem.github.io/docs/
+A fast internet connection
 
-## Acknowledgements
+Building the Live ISO
+sudo pkg install -y pkg git-lite zsync wget sha bash zip devel/py-xdg librsvg2 ca_root_nss
+git clone https://github.com/helloSystem/ISO
+cd ISO
+sudo ./build.sh hello
+The resulting Live ISO will be located at /usr/local/furybsd/iso/.
 
-Please see https://hellosystem.github.io/docs/developer/acknowledgements.
-These builds would not be possible without the infrastructure generously provided by [Cirrus CI](https://cirrus-ci.com/).
+Writing Live Media to USB drive
+sudo dd if=/usr/local/furybsd/iso/FuryBSD-12.1-XFCE.iso of=/dev/daX bs=4m status=progress
+Replace daX with the respective device name.
+
